@@ -6,304 +6,337 @@
 <title>Заказать ролик</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --text:#fff6f0; --mut:rgba(255,236,226,.62); --line:rgba(255,255,255,.12);
-    --glass:rgba(20,10,18,.46); --red:#ff3b30; --orange:#ff8a3d; --glow:rgba(255,80,50,.55);
+    --bg:#0c0c0f; --card:#16161b; --card2:#1d1d23; --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
+    --text:#f4f4f6; --mut:#8b8b96; --mut2:#5d5d68; --acc:#ff3b30; --acc2:#ff5a4f; --accbg:rgba(255,59,48,.12);
+    --r:14px;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;min-height:100%}
-  body{background:#0b0610;color:var(--text);font:16px/1.45 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--text);font:15px/1.45 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;left:50%;top:-220px;width:620px;height:440px;transform:translateX(-50%);z-index:0;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(255,59,48,.16),rgba(255,59,48,0))}
+  main{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:18px 16px 170px}
 
-  /* ---------- фон: закат над городом с краном ---------- */
-  .sky{position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:
-      radial-gradient(120% 60% at 50% 78%, rgba(255,120,60,.55) 0%, rgba(255,60,60,.18) 35%, transparent 65%),
-      linear-gradient(180deg,#0a0716 0%,#1a0b2a 28%,#4a1230 55%,#a8322c 74%,#f07a3a 86%,#2a0d14 100%);}
-  .sun{position:fixed;left:50%;bottom:23vh;width:46vmin;height:46vmin;transform:translateX(-50%);border-radius:50%;z-index:0;
-    background:radial-gradient(circle,#ffd9a0 0%,#ff9a4a 38%,rgba(255,90,50,.35) 62%,transparent 72%);
-    filter:blur(2px);animation:pulse 7s ease-in-out infinite;pointer-events:none}
-  @keyframes pulse{50%{transform:translateX(-50%) scale(1.04);opacity:.9}}
-  .stars{position:fixed;inset:0 0 55% 0;z-index:0;pointer-events:none;opacity:.7;
-    background-image:radial-gradient(1px 1px at 12% 20%,#fff,transparent),radial-gradient(1px 1px at 72% 12%,#fff,transparent),
-      radial-gradient(1.5px 1.5px at 40% 34%,#ffe,transparent),radial-gradient(1px 1px at 88% 40%,#fff,transparent),
-      radial-gradient(1px 1px at 25% 52%,#fdd,transparent),radial-gradient(1.2px 1.2px at 58% 8%,#fff,transparent),
-      radial-gradient(1px 1px at 6% 66%,#fff,transparent),radial-gradient(1px 1px at 94% 18%,#fff,transparent)}
-  .city{position:fixed;left:0;right:0;bottom:0;height:42vh;z-index:0;pointer-events:none}
-  .city svg{width:100%;height:100%;display:block}
-  #embers{position:fixed;inset:0;z-index:1;pointer-events:none}
-  .fog{position:fixed;left:0;right:0;bottom:0;height:30vh;z-index:1;pointer-events:none;
-    background:linear-gradient(0deg,rgba(11,6,16,.95),rgba(11,6,16,0))}
+  .top{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+  .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:-.5px;
+    background:var(--card);border:1.5px solid var(--acc)}
+  .top b{font-weight:700;font-size:15px}
+  .top span{display:block;font-size:12px;color:var(--mut);margin-top:-1px}
+  .badge{margin-left:auto;font-size:12px;font-weight:600;color:var(--mut);display:flex;align-items:center;gap:6px}
+  .badge i{width:7px;height:7px;border-radius:50%;background:#34c759;box-shadow:0 0 0 3px rgba(52,199,89,.15)}
 
-  /* ---------- контент ---------- */
-  main{position:relative;z-index:2;max-width:520px;margin:0 auto;padding:28px 16px 120px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:17px;letter-spacing:-1px;
-    background:#120a10;border:3px solid var(--red);box-shadow:0 0 18px var(--glow),inset 0 0 10px rgba(255,59,48,.35)}
-  .brand span{font-weight:800;letter-spacing:.3px;opacity:.85}
-  h1{font-size:34px;line-height:1.05;margin:26px 0 10px;font-weight:900;letter-spacing:-.5px;text-shadow:0 4px 30px rgba(255,80,50,.45)}
-  h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--red));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .sub{color:var(--mut);margin:0 0 22px;font-size:15px}
-  .perks-t{font-weight:800;font-size:15px;margin:0 0 10px}
-  .perks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
-  .perk{font-size:12.5px;font-weight:600;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--line);backdrop-filter:blur(6px)}
+  h1{font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.6px;margin:0 0 6px}
+  .lead{color:var(--mut);margin:0 0 22px;font-size:14.5px}
 
-  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 0 26px}
-  .stats div{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:12px 10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-  .stats b{display:block;font-size:20px;font-weight:900;background:linear-gradient(90deg,#ffd29a,var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .stats span{font-size:11.5px;color:var(--mut);line-height:1.25;display:block;margin-top:2px}
-  h2.sec{font-size:20px;font-weight:900;margin:8px 2px 12px;letter-spacing:-.2px}
-  .prices .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:15px}
-  .prices .row b{font-weight:900;white-space:nowrap;font-size:17px}
-  .prices .row b i{font-style:normal}
-  .prices .row small{font-weight:600;color:var(--mut);font-size:12px}
-  .prices .row.add{font-size:14px;color:var(--mut)}
-  .prices .row.add b{font-size:15px;color:var(--orange)}
-  .hint0{color:var(--mut);font-size:13px;margin:10px 2px 0}
-  .steps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-  .steps div{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:12px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-  .steps i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:900;margin-right:6px;background:linear-gradient(135deg,var(--orange),var(--red))}
-  .steps b{font-weight:800}
-  .steps span{display:block;font-size:12.5px;color:var(--mut);margin-top:4px}
-  .ask{display:block;width:100%;margin:0 0 26px;padding:14px;border-radius:14px;cursor:pointer;color:var(--text);font:700 15px/1 Inter,sans-serif;
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,138,61,.55);backdrop-filter:blur(10px)}
-  .card{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:16px 16px 18px;margin-bottom:12px;
-    backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  .q{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;margin-bottom:4px}
-  .n{flex:0 0 24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;
-    background:linear-gradient(135deg,var(--orange),var(--red));box-shadow:0 0 12px var(--glow)}
-  .hint{color:var(--mut);font-size:13px;margin:0 0 10px 34px}
-  input,textarea{width:100%;background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:14px;color:var(--text);
-    font:inherit;padding:13px 14px;outline:none;transition:border-color .2s,box-shadow .2s}
-  input::placeholder,textarea::placeholder{color:rgba(255,236,226,.35)}
-  input:focus,textarea:focus{border-color:rgba(255,120,70,.8);box-shadow:0 0 0 3px rgba(255,90,50,.18)}
-  textarea{min-height:82px;resize:vertical}
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{padding:10px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;user-select:none;
-    background:rgba(0,0,0,.3);border:1px solid var(--line);transition:all .18s}
-  .chip.off{opacity:.55}
-  .nope{color:#ffb3a8;font-size:13px;margin:10px 2px 0}
-  .chip.on{background:linear-gradient(135deg,rgba(255,138,61,.9),rgba(255,59,48,.9));border-color:transparent;box-shadow:0 0 16px var(--glow)}
-  .err{color:#ffb3a8;font-size:13px;margin:6px 4px;display:none}
-  .note{color:var(--mut);font-size:13px;text-align:center;margin:16px 8px 0}
-  #out{white-space:pre-wrap;font-size:12px;color:#ffd54a;margin-top:12px;word-break:break-all}
+  .tab{display:none;animation:in .22s ease}
+  .tab.on{display:block}
+  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  .bar{position:fixed;left:0;right:0;bottom:0;z-index:3;padding:14px 16px calc(14px + env(safe-area-inset-bottom));
-    background:linear-gradient(0deg,rgba(11,6,16,.95) 40%,rgba(11,6,16,0))}
-  #send{display:block;width:100%;max-width:488px;margin:0 auto;border:0;border-radius:16px;padding:17px;color:#fff;cursor:pointer;
-    font:900 17px/1 Inter,sans-serif;letter-spacing:.2px;background:linear-gradient(135deg,var(--orange),var(--red));
-    box-shadow:0 8px 28px rgba(255,59,48,.5)}
-  #send:active{transform:scale(.98)}
+  .field{margin-bottom:18px}
+  .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--mut);margin:0 2px 8px}
+  .lab small{font-weight:500;color:var(--mut2)}
+  input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r);color:var(--text);
+    font:inherit;font-size:15px;padding:13px 14px;outline:none;transition:border-color .15s,background .15s}
+  input::placeholder,textarea::placeholder{color:var(--mut2)}
+  input:focus,textarea:focus{border-color:rgba(255,59,48,.6);background:var(--card2)}
+  textarea{min-height:92px;resize:none}
 
-  .done{display:none;text-align:center;padding-top:30vh}
-  .done h2{font-size:28px;font-weight:900;margin:0 0 8px}
+  .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+  .seg button{appearance:none;border:0;background:transparent;color:var(--mut);font:600 14px/1.15 Inter,sans-serif;padding:10px 4px;border-radius:10px;cursor:pointer;
+    transition:background .15s,color .15s}
+  .seg button small{display:block;font-size:11.5px;font-weight:500;color:var(--mut2);margin-top:3px}
+  .seg button.on{background:var(--card2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2)}
+  .seg button.on small{color:var(--acc2)}
+  .seg button.off{opacity:.45}
+  .msg{font-size:13px;color:var(--acc2);margin:8px 2px 0}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:18px}
+  summary{list-style:none;cursor:pointer;padding:14px;font-weight:600;font-size:14.5px;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary span{color:var(--mut);font-weight:500;font-size:13px}
+  summary svg{transition:transform .2s;color:var(--mut)}
+  details[open] summary svg{transform:rotate(180deg)}
+  details .in{padding:0 14px 4px}
+  details input,details textarea{background:var(--bg)}
+
+  .incl{display:flex;flex-wrap:wrap;gap:6px 14px;margin:2px 2px 0;color:var(--mut);font-size:13px}
+  .incl span{display:flex;align-items:center;gap:6px}
+  .incl svg{color:var(--acc)}
+
+  .list{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:0}
+  .row span{color:var(--text)}
+  .row span small{display:block;color:var(--mut);font-size:12.5px}
+  .row b{font-weight:700;white-space:nowrap}
+  .row b.acc{color:var(--acc2)}
+  .h2{font-size:13px;font-weight:600;color:var(--mut);margin:0 2px 8px;text-transform:uppercase;letter-spacing:.6px}
+  .steps .row{justify-content:flex-start}
+  .steps i{font-style:normal;flex:0 0 24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--accbg);color:var(--acc2)}
+  .ghost{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--r);cursor:pointer;
+    background:var(--card);border:1px solid var(--line2);color:var(--text);font:600 15px/1 Inter,sans-serif}
+
+  .cta{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:3;padding:10px 16px 10px;
+    background:linear-gradient(0deg,var(--bg) 55%,rgba(12,12,15,0))}
+  .cta button{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:488px;margin:0 auto;border:0;border-radius:var(--r);
+    padding:16px 18px;color:#fff;cursor:pointer;font:700 16px/1 Inter,sans-serif;background:var(--acc);transition:transform .1s,background .15s}
+  .cta button:active{transform:scale(.985);background:#e8352b}
+  .cta button span{font-weight:600;opacity:.85}
+  .cta button.solo{justify-content:center}
+  .cta[hidden]{display:none}
+  .err{font-size:13px;color:var(--acc2);text-align:center;margin:0 0 8px;display:none}
+
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:4;background:rgba(18,18,22,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  nav div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+  nav button{appearance:none;border:0;background:none;color:var(--mut2);font:600 11px/1 Inter,sans-serif;padding:10px 0 12px;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:6px;transition:color .15s}
+  nav button.on{color:var(--text)}
+  nav button.on svg{color:var(--acc)}
+
+  .done{display:none;position:fixed;inset:0;z-index:9;background:var(--bg);place-items:center;text-align:center;padding:24px}
+  .done.on{display:grid}
+  .done .ok{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;background:var(--accbg);color:var(--acc2)}
+  .done h2{font-size:22px;font-weight:800;margin:0 0 6px}
+  .done p{color:var(--mut);margin:0}
+  #out{white-space:pre-wrap;font-size:12px;color:var(--mut);margin-top:12px;word-break:break-all}
 </style>
 </head>
 <body>
-<div class="sky"></div>
-<div class="stars"></div>
-<div class="sun"></div>
-<div class="city">
-  <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-    <!-- дальний город -->
-    <g fill="#5a1a2c" opacity=".75">
-      <rect x="0" y="120" width="22" height="80"/><rect x="24" y="96" width="18" height="104"/><rect x="44" y="130" width="26" height="70"/>
-      <rect x="74" y="84" width="20" height="116"/><rect x="96" y="110" width="30" height="90"/><rect x="130" y="70" width="16" height="130"/>
-      <rect x="150" y="118" width="24" height="82"/><rect x="230" y="100" width="22" height="100"/><rect x="256" y="124" width="28" height="76"/>
-      <rect x="318" y="92" width="20" height="108"/><rect x="342" y="116" width="26" height="84"/><rect x="372" y="104" width="28" height="96"/>
-    </g>
-    <!-- кран -->
-    <g stroke="#2a0c18" stroke-width="2.4" fill="none" opacity=".95">
-      <path d="M292 200 V44 M300 200 V44 M292 60 L300 76 M300 76 L292 92 M292 92 L300 108 M300 108 L292 124 M292 124 L300 140 M300 140 L292 156 M292 156 L300 172 M300 172 L292 188"/>
-      <path d="M232 44 H398 M232 50 H398 M296 44 L296 30 L240 44 M296 30 L398 44"/>
-      <path d="M360 50 V96" stroke-width="1.2"/>
-    </g>
-    <rect x="352" y="96" width="16" height="10" fill="#2a0c18"/>
-    <circle cx="296" cy="28" r="2.4" fill="#ff3b30"><animate attributeName="opacity" values="1;.15;1" dur="1.6s" repeatCount="indefinite"/></circle>
-    <!-- ближний план: дома и деревья -->
-    <path fill="#140810" d="M0 200 V168 h18 v-14 h22 v20 h14 v-30 h26 v24 h20 v-10 h16 v20 h30 v-26 h22 v32 h18 v-18 h24 v14 h20 v-22 h28 v28 h16 v-12 h22 v18 h26 v-24 h20 v30 h18 v-16 h20 V200 Z"/>
-    <g fill="#0b0610">
-      <path d="M0 200 Q40 176 80 186 T170 182 T260 188 T340 180 T400 186 V200 Z"/>
-      <path d="M30 190 l8 -26 l8 26 z M50 192 l6 -18 l6 18 z M360 188 l9 -30 l9 30 z M382 190 l6 -20 l6 20 z"/>
-    </g>
-  </svg>
-</div>
-<canvas id="embers"></canvas>
-<div class="fog"></div>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
 
-<main id="app">
-  <div class="brand"><div class="logo">SL</div><span>survival.loop</span></div>
-  <h1>Ролик в стиле<br><em>survival.loop</em></h1>
-  <p class="sub">Анимированная история выживания под вашу идею. Опишите сюжет, посмотрим и назовём цену.</p>
-  <p class="perks-t">Делаем всё за вас:</p>
-  <div class="perks"><span class="perk">✍️ Сценарий</span><span class="perk">🎬 Анимация</span><span class="perk">🎙 Озвучка</span><span class="perk">🔊 Звук и музыка</span><span class="perk">✂️ Монтаж</span><span class="perk">📱 Под TikTok и YouTube</span></div>
-
-  <div class="stats">
-    <div><b>2 млн</b><span>просмотров у лучших роликов канала</span></div>
-    <div><b>24 часа</b><span>и ролик готов</span></div>
+<main>
+  <div class="top">
+    <div class="logo">SL</div>
+    <div><b>survival.loop</b><span>Ролики на заказ</span></div>
+    <div class="badge"><i></i>Принимаем заказы</div>
   </div>
 
-  <h2 class="sec">Цены</h2>
-  <div class="card prices">
-    <div class="row"><span>🎬 До 60 секунд</span><b data-p="до 60 сек"></b></div>
-    <div class="row"><span>🎬 60–90 секунд</span><b data-p="60–90 сек"></b></div>
-    <div class="row"><span>🎬 90–120 секунд</span><b data-p="90–120 сек"></b></div>
-    <div class="row"><span>📺 Серия от 3 частей</span><b><i data-p="серия из нескольких частей"></i> <small>за часть</small></b></div>
-    <div class="row add"><span>➕ Оба формата, 9:16 и 16:9</span><b>+100 ₽</b></div>
-    <div class="row add"><span>⚡ Срочно, за 2–3 часа</span><b>+200 ₽</b></div>
-    <p class="hint0">Одна правка текста до озвучки бесплатно.</p>
-  </div>
+  <!-- ===== Ролик ===== -->
+  <section class="tab on" id="t-order">
+    <h1>Заказать ролик</h1>
+    <p class="lead">Анимированная история выживания под вашу идею. Готово за сутки.</p>
 
-  <h2 class="sec">Как это работает</h2>
-  <div class="steps">
-    <div><i>1</i><b>Заявка</b><span>Описываете идею ниже</span></div>
-    <div><i>2</i><b>Цена</b><span>Пишем цену и срок в чат</span></div>
-    <div><i>3</i><b>Оплата</b><span>Когда согласуем детали</span></div>
-    <div><i>4</i><b>Ролик</b><span>Присылаем готовое видео</span></div>
-  </div>
-  <button class="ask" type="button" id="ask">💬 Есть вопрос? Напишите нам</button>
+    <div class="field">
+      <div class="lab">Идея ролика</div>
+      <textarea id="o-tema" placeholder="Например: школьник застрял в лифте во время пожара"></textarea>
+    </div>
 
-  <h2 class="sec">Ваша история</h2>
-
-  <form id="f" autocomplete="off">
-    <div class="card"><div class="q"><span class="n">1</span>О чём ролик?</div>
-      <p class="hint">Ситуация в одну-две фразы</p>
-      <textarea name="tema" placeholder="Например: школьник застрял в лифте во время пожара"></textarea></div>
-
-    <div class="card"><div class="q"><span class="n">2</span>Герой</div>
-      <p class="hint">Имя, возраст, кто он</p>
-      <input name="geroy" placeholder="Например: Артём, 14 лет"></div>
-
-    <div class="card"><div class="q"><span class="n">3</span>Где происходит</div>
-      <p class="hint">Место и время суток</p>
-      <input name="mesto" placeholder="Например: многоэтажка, вечер"></div>
-
-    <div class="card"><div class="q"><span class="n">4</span>Длина</div><p class="hint">&nbsp;</p>
-      <div class="chips" data-name="dlina">
-        <span class="chip">до 60 сек</span><span class="chip">60–90 сек</span>
-        <span class="chip">90–120 сек</span><span class="chip">серия из нескольких частей</span>
-      </div></div>
-
-    <div class="card"><div class="q"><span class="n">5</span>Формат</div><p class="hint">&nbsp;</p>
-      <div class="chips" data-name="format">
-        <span class="chip">9:16 (TikTok, Reels, Shorts)</span><span class="chip">16:9 (YouTube)</span><span class="chip">оба формата</span>
-      </div></div>
-
-    <div class="card"><div class="q"><span class="n">6</span>Когда нужен</div><p class="hint">&nbsp;</p>
-      <div class="chips" data-name="srok">
-        <span class="chip on">за сутки</span><span class="chip urg">⚡ срочно, за 2–3 часа (+200 ₽)</span>
+    <div class="field">
+      <div class="lab">Длина</div>
+      <div class="seg" data-name="dlina">
+        <button data-v="до 60 сек" class="on">до 60 с<small>390 ₽</small></button>
+        <button data-v="60–90 сек">60–90 с<small>490 ₽</small></button>
+        <button data-v="90–120 сек">90–120 с<small>590 ₽</small></button>
       </div>
-      <p class="nope" id="nope" hidden>Срочный заказ сейчас недоступен. Выберите «за сутки».</p></div>
+    </div>
 
-    <div class="card"><div class="q"><span class="n">7</span>Пример</div>
-      <p class="hint">Ссылка на ролик, на который должно быть похоже. Видео можно прислать в чат следующим шагом</p>
-      <input name="primer" inputmode="url" placeholder="https://…"></div>
+    <div class="field">
+      <div class="lab">Формат</div>
+      <div class="seg" data-name="format">
+        <button data-v="9:16 (TikTok, Reels, Shorts)" class="on">9:16<small>TikTok, Reels</small></button>
+        <button data-v="16:9 (YouTube)">16:9<small>YouTube</small></button>
+        <button data-v="оба формата">Оба<small>+100 ₽</small></button>
+      </div>
+    </div>
 
-    <div class="card"><div class="q"><span class="n">8</span>Пожелания и контакт</div>
-      <p class="hint">Для чего ролик, сроки. Контакт, если удобнее не в этом чате</p>
-      <textarea name="pozhelaniya" placeholder="Необязательно"></textarea>
-      <div style="height:8px"></div>
-      <input name="kontakt" placeholder="@ник, телефон или почта"></div>
+    <div class="field">
+      <div class="lab">Срок</div>
+      <div class="seg" data-name="srok">
+        <button data-v="за сутки" class="on">За сутки<small>Обычный</small></button>
+        <button data-v="срочно, за 2–3 часа" class="urg">За 2–3 часа<small>+200 ₽</small></button>
+      </div>
+      <p class="msg" id="nope" hidden>Срочный заказ сейчас недоступен. Выберите «за сутки».</p>
+    </div>
 
-    <div class="err" id="err">Заполните тему, длину и формат.</div>
-    <p class="note">Оплата только после того, как согласуем цену и детали.<br>Остались вопросы? <a href="#" id="ask2" style="color:var(--orange)">Напишите нам</a></p>
+    <details>
+      <summary>Детали <span>необязательно <svg width="16" height="16"><use href="#i-down"/></svg></span></summary>
+      <div class="in">
+        <div class="field"><div class="lab">Герой</div><input id="o-geroy" placeholder="Имя, возраст: Артём, 14 лет"></div>
+        <div class="field"><div class="lab">Место и время</div><input id="o-mesto" placeholder="Многоэтажка, вечер"></div>
+        <div class="field"><div class="lab">Пример <small>видео можно прислать в чат</small></div><input id="o-primer" inputmode="url" placeholder="Ссылка на похожий ролик"></div>
+        <div class="field"><div class="lab">Пожелания</div><textarea id="o-pozhelaniya" placeholder="Для чего ролик, что обязательно показать"></textarea></div>
+        <div class="field"><div class="lab">Контакт <small>если не в этом чате</small></div><input id="o-kontakt" placeholder="@ник, телефон или почта"></div>
+      </div>
+    </details>
+
+    <div class="incl">
+      <span><svg width="14" height="14"><use href="#i-check"/></svg>Сценарий</span>
+      <span><svg width="14" height="14"><use href="#i-check"/></svg>Анимация</span>
+      <span><svg width="14" height="14"><use href="#i-check"/></svg>Озвучка</span>
+      <span><svg width="14" height="14"><use href="#i-check"/></svg>Звук</span>
+      <span><svg width="14" height="14"><use href="#i-check"/></svg>Монтаж</span>
+    </div>
+  </section>
+
+  <!-- ===== Крупный заказ ===== -->
+  <section class="tab" id="t-big">
+    <h1>Крупный заказ</h1>
+    <p class="lead">Серии из нескольких частей и пакеты роликов для канала. Цену назовём после заявки, от&nbsp;390&nbsp;₽ за&nbsp;ролик.</p>
+
+    <div class="field">
+      <div class="lab">Что нужно</div>
+      <textarea id="b-tema" placeholder="Например: серия из 5 частей про выживание в тайге, или 10 роликов в месяц для канала"></textarea>
+    </div>
+
+    <div class="field">
+      <div class="lab">Сколько роликов</div>
+      <div class="seg" data-name="obem">
+        <button data-v="3–5" class="on">3–5</button>
+        <button data-v="6–10">6–10</button>
+        <button data-v="больше 10">10+</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="lab">Формат</div>
+      <div class="seg" data-name="bformat">
+        <button data-v="9:16 (TikTok, Reels, Shorts)" class="on">9:16</button>
+        <button data-v="16:9 (YouTube)">16:9</button>
+        <button data-v="оба формата">Оба</button>
+      </div>
+    </div>
+
+    <div class="field"><div class="lab">Пример <small>необязательно</small></div><input id="b-primer" inputmode="url" placeholder="Ссылка на канал или ролик"></div>
+    <div class="field"><div class="lab">Контакт <small>если не в этом чате</small></div><input id="b-kontakt" placeholder="@ник, телефон или почта"></div>
+  </section>
+
+  <!-- ===== Цены ===== -->
+  <section class="tab" id="t-price">
+    <h1>Цены</h1>
+    <p class="lead">Сценарий, анимация, озвучка, звук и монтаж уже в цене.</p>
+
+    <div class="list">
+      <div class="row"><span>До 60 секунд</span><b data-p="до 60 сек"></b></div>
+      <div class="row"><span>60–90 секунд</span><b data-p="60–90 сек"></b></div>
+      <div class="row"><span>90–120 секунд</span><b data-p="90–120 сек"></b></div>
+      <div class="row"><span>Серия от 3 частей<small>за часть</small></span><b data-p="серия из нескольких частей"></b></div>
+      <div class="row"><span>Оба формата, 9:16 и 16:9</span><b class="acc">+100 ₽</b></div>
+      <div class="row"><span>Срочно, за 2–3 часа</span><b class="acc">+200 ₽</b></div>
+    </div>
+
+    <div class="h2">Как это работает</div>
+    <div class="list steps">
+      <div class="row"><i>1</i><span>Заявка<small>Описываете идею</small></span></div>
+      <div class="row"><i>2</i><span>Цена<small>Подтверждаем цену и срок в чате</small></span></div>
+      <div class="row"><i>3</i><span>Оплата<small>Когда согласуем детали</small></span></div>
+      <div class="row"><i>4</i><span>Ролик<small>Присылаем готовое видео в чат</small></span></div>
+    </div>
+    <p class="lead" style="margin:-6px 2px 18px;font-size:13px">Одна правка текста до озвучки бесплатно.</p>
+
+    <button class="ghost" id="ask" type="button">Задать вопрос</button>
     <div id="out"></div>
-  </form>
+  </section>
 </main>
 
-<div class="done" id="done"><main><h2>Заявка отправлена 🔥</h2><p class="sub">Ответим в чате с ботом.</p></main></div>
-<div class="bar"><button id="send" type="button">Отправить заявку</button></div>
+<div class="cta" id="cta">
+  <div class="err" id="err">Опишите идею</div>
+  <button id="send" type="button">Заказать <span id="sum">390 ₽</span></button>
+</div>
+
+<nav><div>
+  <button class="on" data-tab="t-order">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>Ролик</button>
+  <button data-tab="t-big">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M6 5h12M8.5 2h7"/></svg>Крупный заказ</button>
+  <button data-tab="t-price">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Цены</button>
+</div></nav>
+
+<div class="done" id="done"><div>
+  <div class="ok"><svg width="30" height="30"><use href="#i-check"/></svg></div>
+  <h2>Заявка отправлена</h2><p>Ответим в чате с ботом</p>
+</div></div>
 
 <script>
   const tg = window.Telegram && Telegram.WebApp;
   const inTg = !!(tg && tg.initData);
-  if (inTg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#0a0716'); tg.setBackgroundColor('#0b0610'); } catch (e) {} }
-
-  // угольки над городом
-  const cv = document.getElementById('embers'), cx = cv.getContext('2d');
-  let W, H, P = [];
-  function fit() { W = cv.width = innerWidth * devicePixelRatio; H = cv.height = innerHeight * devicePixelRatio; }
-  fit(); addEventListener('resize', fit);
-  function spawn(y) { return { x: Math.random() * W, y: y ?? H * (0.7 + Math.random() * 0.3), r: (0.6 + Math.random() * 1.8) * devicePixelRatio,
-    vy: (0.25 + Math.random() * 0.6) * devicePixelRatio, ph: Math.random() * 6.28, a: 0.4 + Math.random() * 0.6 }; }
-  for (let i = 0; i < 46; i++) P.push(spawn(Math.random() * H));
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  (function tick(t) {
-    cx.clearRect(0, 0, W, H);
-    for (const p of P) {
-      p.y -= p.vy; p.x += Math.sin(t / 900 + p.ph) * 0.35 * devicePixelRatio;
-      const life = Math.min(1, p.y / H * 1.6);
-      if (p.y < H * 0.15) Object.assign(p, spawn());
-      cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.28);
-      cx.fillStyle = `rgba(255,${140 + (p.r * 20 | 0)},70,${p.a * life})`;
-      cx.shadowColor = 'rgba(255,90,40,.9)'; cx.shadowBlur = 8 * devicePixelRatio; cx.fill();
-    }
-    if (!still) requestAnimationFrame(tick);
-  })(0);
+  if (inTg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#0c0c0f'); tg.setBackgroundColor('#0c0c0f'); tg.setBottomBarColor && tg.setBottomBarColor('#121216'); } catch (e) {} }
+  const haptic = (k, v) => { try { inTg && tg.HapticFeedback[k](v); } catch (e) {} };
+  const $ = id => document.getElementById(id);
 
   // прайс — те же числа, что PRICES в bot.py
   const PRICES = { 'до 60 сек': 390, '60–90 сек': 490, '90–120 сек': 590, 'серия из нескольких частей': 390 };
-  const rub = x => x.toLocaleString('ru-RU').replace(/ /g, ' ') + ' ₽';
+  const rub = x => x.toLocaleString('ru-RU').replace(/\s/g, ' ') + ' ₽';
   document.querySelectorAll('[data-p]').forEach(el => el.textContent = rub(PRICES[el.dataset.p]));
 
-  const sendBtn = document.getElementById('send');
-  const picked = { srok: 'за сутки' };
-  // срочные: бот добавляет ?urgent=0, когда Фёдор их выключил
-  const urgentOn = new URLSearchParams(location.search).get('urgent') !== '0';
-  function setUrgent(on) {                    // демо переключает это вживую
-    const c = document.querySelector('.chip.urg');
+  const picked = {};
+  document.querySelectorAll('.seg').forEach(seg => {
+    picked[seg.dataset.name] = seg.querySelector('.on').dataset.v;
+    seg.addEventListener('click', ev => {
+      const b = ev.target.closest('button'); if (!b) return;
+      if (b.classList.contains('off')) { $('nope').hidden = false; haptic('notificationOccurred', 'error'); return; }
+      if (seg.dataset.name === 'srok') $('nope').hidden = true;
+      seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+      picked[seg.dataset.name] = b.dataset.v;
+      upd(); haptic('selectionChanged');
+    });
+  });
+
+  // срочные: бот добавляет ?urgent=0, когда владелец их выключил
+  function setUrgent(on) {
+    const c = document.querySelector('.urg');
     c.classList.toggle('off', !on);
-    if (!on && c.classList.contains('on')) document.querySelector('[data-name=srok] .chip').click();
-    if (on) document.getElementById('nope').hidden = true;
+    if (!on && c.classList.contains('on')) document.querySelector('[data-name=srok] button').click();
+    if (on) $('nope').hidden = true;
   }
   window.setUrgent = setUrgent;
-  setUrgent(urgentOn);
-  function updEstimate() {
+  setUrgent(new URLSearchParams(location.search).get('urgent') !== '0');
+
+  let tab = 't-order';
+  function upd() {
+    $('err').style.display = 'none';
+    $('cta').hidden = tab === 't-price';
+    const btn = $('send');
+    if (tab === 't-big') { btn.className = 'solo'; btn.innerHTML = 'Отправить запрос'; return; }
     let p = PRICES[picked.dlina];
-    if (!p) { sendBtn.textContent = 'Отправить заявку'; return; }
     if (picked.format === 'оба формата') p += 100;
     if (picked.srok === 'срочно, за 2–3 часа') p += 200;
-    sendBtn.textContent = 'Отправить заявку · ' + rub(p) + (picked.dlina.startsWith('серия') ? ' / часть' : '');
+    btn.className = ''; btn.innerHTML = 'Заказать <span>' + rub(p) + '</span>';
   }
-  document.querySelectorAll('.chips').forEach(box => box.addEventListener('click', ev => {
-    const c = ev.target.closest('.chip'); if (!c) return;
-    if (c.classList.contains('off')) {          // срочные выключены — как «нет в наличии»
-      document.getElementById('nope').hidden = false;
-      if (inTg) tg.HapticFeedback.notificationOccurred('error');
-      return;
-    }
-    if (box.dataset.name === 'srok') document.getElementById('nope').hidden = true;
-    box.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
-    c.classList.add('on');
-    picked[box.dataset.name] = c.classList.contains('urg') ? 'срочно, за 2–3 часа' : c.textContent;
-    updEstimate();
-    if (inTg) tg.HapticFeedback.selectionChanged();
-  }));
+  document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+    tab = b.dataset.tab;
+    document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.id === tab));
+    scrollTo(0, 0); upd(); haptic('selectionChanged');
+  });
+  upd();
 
-  // вопрос: закрываем форму, бот просит написать вопрос в чат
+  const val = id => $(id).value.trim().slice(0, 900);
+
   function ask(ev) {
     ev && ev.preventDefault();
     if (window.onVopros) return window.onVopros();   // демо-страница
     if (inTg) tg.sendData(JSON.stringify({ vopros: 1 }));
-    else document.getElementById('out').textContent = 'Вне Telegram: бот попросит написать вопрос в чат.';
+    else $('out').textContent = 'Вне Telegram: бот попросит написать вопрос в чат.';
   }
-  document.getElementById('ask').onclick = ask;
-  document.getElementById('ask2').onclick = ask;
+  $('ask').onclick = ask;
 
-  document.getElementById('send').onclick = () => {
-    const fd = new FormData(document.getElementById('f'));
-    const d = Object.fromEntries([...fd.entries()].map(([k, v]) => [k, String(v).trim().slice(0, 900)]));
-    Object.assign(d, picked);
-    const ok = d.tema && d.dlina && d.format;
-    document.getElementById('err').style.display = ok ? 'none' : 'block';
-    if (!ok) { if (inTg) tg.HapticFeedback.notificationOccurred('error'); return; }
+  $('send').onclick = () => {
+    let d;
+    if (tab === 't-big') {
+      d = { tip: 'крупный заказ', tema: val('b-tema'), obem: picked.obem, format: picked.bformat,
+            primer: val('b-primer'), kontakt: val('b-kontakt') };
+    } else {
+      d = { tema: val('o-tema'), geroy: val('o-geroy'), mesto: val('o-mesto'), dlina: picked.dlina, format: picked.format,
+            srok: picked.srok, primer: val('o-primer'), pozhelaniya: val('o-pozhelaniya'), kontakt: val('o-kontakt') };
+    }
+    if (!d.tema) {
+      $('err').style.display = 'block'; haptic('notificationOccurred', 'error');
+      $(tab === 't-big' ? 'b-tema' : 'o-tema').focus(); return;
+    }
     if (!d.kontakt) d.kontakt = 'в этом чате';
-    if (!d.pozhelaniya) d.pozhelaniya = 'нет';
-    const json = JSON.stringify(d);
+    if (tab !== 't-big' && !d.pozhelaniya) d.pozhelaniya = 'нет';
     if (window.onZayavka) return window.onZayavka(d);   // демо-страница
-    if (inTg) tg.sendData(json);   // работает при открытии кнопкой из бота; окно закроется само
-    else document.getElementById('out').textContent = 'Вне Telegram, данные для бота:\n' + json;
+    if (inTg) { haptic('notificationOccurred', 'success'); tg.sendData(JSON.stringify(d)); }
+    else { $('done').classList.add('on'); console.log(d); }
   };
 </script>
 </body>
