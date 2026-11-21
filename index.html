@@ -334,7 +334,9 @@
 <script>
 (function () {
   const tg = window.Telegram && Telegram.WebApp;
-  const inTg = !!(tg && tg.initData);
+  // С кнопки клавиатуры Telegram НЕ передаёт initData — определяем Telegram по платформе,
+  // иначе форма решит, что она в браузере, и заявка не уйдёт в бота.
+  const inTg = !!(tg && tg.platform && tg.platform !== 'unknown');
   const $ = id => document.getElementById(id);
   const haptic = (k, v) => { try { inTg && tg.HapticFeedback[k](v); } catch (e) {} };
   if (inTg) {
@@ -521,7 +523,11 @@
     }
     if (window.onZayavka) return window.onZayavka(data);
     if (inTg) {
-      try { haptic('notificationOccurred', 'success'); tg.sendData(json); }   // окно закроется само
+      try {
+        haptic('notificationOccurred', 'success');
+        tg.sendData(json);                                  // окно закроется само
+        setTimeout(() => show('done', 1), 1500);            // если клиент Telegram не закрыл окно
+      }
       catch (e) { tg.showAlert('Откройте форму кнопкой «Заказать ролик» внизу чата с ботом — так заявка дойдёт.'); }
     } else {
       show('done', 1);
