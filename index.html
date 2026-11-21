@@ -9,426 +9,540 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0c0c0f; --card:#16161b; --card2:#1d1d23; --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
+    --bg:#0c0c0f; --card:#16161b; --card2:#1d1d23; --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.13);
     --text:#f4f4f6; --mut:#8b8b96; --mut2:#5d5d68; --acc:#ff3b30; --acc2:#ff5a4f; --accbg:rgba(255,59,48,.12);
-    --r:14px;
+    --ok:#34c759; --r:16px;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0}
+  html,body{margin:0;height:100%}
   body{background:var(--bg);color:var(--text);font:15px/1.45 Inter,-apple-system,"Segoe UI",Roboto,sans-serif;
     -webkit-font-smoothing:antialiased;overflow-x:hidden}
-  body::before{content:"";position:fixed;left:50%;top:-220px;width:620px;height:440px;transform:translateX(-50%);z-index:0;pointer-events:none;
-    background:radial-gradient(closest-side,rgba(255,59,48,.16),rgba(255,59,48,0))}
-  main{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:18px 16px 170px}
+  body::before{content:"";position:fixed;left:50%;top:-240px;width:640px;height:460px;transform:translateX(-50%);z-index:0;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(255,59,48,.15),rgba(255,59,48,0))}
+  button{font:inherit;color:inherit}
 
-  .top{display:flex;align-items:center;gap:10px;margin-bottom:22px}
-  .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:-.5px;
+  /* ---------- шапка шагов ---------- */
+  .hdr{position:sticky;top:0;z-index:5;display:none;align-items:center;gap:12px;padding:12px 16px;max-width:520px;margin:0 auto;
+    background:linear-gradient(180deg,var(--bg) 70%,rgba(12,12,15,0))}
+  .hdr.on{display:flex}
+  .back{appearance:none;border:0;background:var(--card);border:1px solid var(--line);width:36px;height:36px;border-radius:12px;
+    display:grid;place-items:center;cursor:pointer;flex:0 0 36px}
+  .tg .back{display:none}
+  .prog{flex:1;height:4px;border-radius:4px;background:var(--card2);overflow:hidden}
+  .prog i{display:block;height:100%;width:0;background:var(--acc);border-radius:4px;transition:width .3s ease}
+  .cnt{font-size:12.5px;font-weight:600;color:var(--mut);min-width:34px;text-align:right}
+
+  main{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:4px 16px 120px}
+  .scr{display:none}
+  .scr.on{display:block;animation:in .26s ease}
+  .scr.back-anim{animation:inb .26s ease}
+  @keyframes in{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+  @keyframes inb{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+
+  h1{font-size:30px;line-height:1.1;font-weight:800;letter-spacing:-.8px;margin:0 0 10px}
+  h2{font-size:24px;line-height:1.15;font-weight:800;letter-spacing:-.5px;margin:8px 0 6px}
+  .lead{color:var(--mut);margin:0 0 20px;font-size:15px}
+
+  /* ---------- приветствие ---------- */
+  .brand{display:flex;align-items:center;gap:10px;margin:14px 0 22px}
+  .logo{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:-.5px;
     background:var(--card);border:1.5px solid var(--acc)}
-  .top b{font-weight:700;font-size:15px}
-  .top span{display:block;font-size:12px;color:var(--mut);margin-top:-1px}
-  .badge{margin-left:auto;font-size:12px;font-weight:600;color:var(--mut);display:flex;align-items:center;gap:6px}
-  .badge i{width:7px;height:7px;border-radius:50%;background:#34c759;box-shadow:0 0 0 3px rgba(52,199,89,.15)}
+  .brand b{font-weight:700;font-size:15px;display:block}
+  .brand span{font-size:12px;color:var(--mut)}
+  .live{margin-left:auto;font-size:12px;font-weight:600;color:var(--mut);display:flex;align-items:center;gap:6px}
+  .live i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(52,199,89,.15)}
+  .shots{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px 20px;padding:2px 16px;scrollbar-width:none}
+  .shots::-webkit-scrollbar{display:none}
+  .shots img{flex:0 0 auto;width:124px;height:220px;object-fit:cover;border-radius:14px;scroll-snap-align:start;
+    border:1px solid var(--line2);background:var(--card)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+  .stats div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px}
+  .stats b{display:block;font-size:19px;font-weight:800;letter-spacing:-.3px}
+  .stats span{display:block;font-size:11.5px;color:var(--mut);line-height:1.25;margin-top:2px}
+  .checks{display:flex;flex-direction:column;gap:9px;margin:0 2px 18px;font-size:14px}
+  .checks div{display:flex;gap:10px;align-items:center}
+  .checks svg{flex:0 0 18px;color:var(--acc)}
+  .links{display:flex;justify-content:center;gap:22px;margin-top:4px}
+  .links button{appearance:none;border:0;background:none;color:var(--mut);font-weight:600;font-size:14px;cursor:pointer;padding:6px}
 
-  h1{font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.6px;margin:0 0 6px}
-  .lead{color:var(--mut);margin:0 0 22px;font-size:14.5px}
+  /* ---------- варианты ---------- */
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{appearance:none;width:100%;text-align:left;display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--r);cursor:pointer;
+    background:var(--card);border:1px solid var(--line);transition:border-color .15s,background .15s,transform .1s}
+  .opt:active{transform:scale(.985)}
+  .opt .tx{flex:1;min-width:0}
+  .opt .t{display:block;font-weight:700;font-size:16px}
+  .opt .s{display:block;font-size:13px;color:var(--mut);margin-top:2px}
+  .opt .p{font-weight:700;white-space:nowrap;text-align:right}
+  .opt .p small{display:block;font-weight:500;font-size:12px;color:var(--mut2);text-decoration:line-through}
+  .opt .badge{display:inline-block;font-size:11px;font-weight:700;color:var(--ok);background:rgba(52,199,89,.12);padding:2px 7px;border-radius:6px;margin-left:6px;vertical-align:2px}
+  .opt .rd{flex:0 0 22px;height:22px;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center;transition:all .15s}
+  .opt.on{border-color:var(--acc);background:var(--card2)}
+  .opt.on .rd{border-color:var(--acc);background:var(--acc)}
+  .opt.on .rd::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+  .opt.off{opacity:.5}
+  .msg{font-size:13.5px;color:var(--acc2);margin:12px 2px 0}
 
-  .tab{display:none;animation:in .22s ease}
-  .tab.on{display:block}
-  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
-  .field{margin-bottom:18px}
+  /* ---------- поля ---------- */
   .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--mut);margin:0 2px 8px}
   .lab small{font-weight:500;color:var(--mut2)}
+  .field{margin-bottom:16px}
   input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r);color:var(--text);
-    font:inherit;font-size:15px;padding:13px 14px;outline:none;transition:border-color .15s,background .15s}
+    font:inherit;font-size:16px;padding:14px;outline:none;transition:border-color .15s,background .15s}
   input::placeholder,textarea::placeholder{color:var(--mut2)}
   input:focus,textarea:focus{border-color:rgba(255,59,48,.6);background:var(--card2)}
-  textarea{min-height:92px;resize:none}
+  textarea{min-height:120px;resize:none}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{appearance:none;border:1px solid var(--line2);background:transparent;color:var(--mut);font-size:13px;font-weight:500;
+    padding:8px 12px;border-radius:999px;cursor:pointer}
+  .chip:active{background:var(--card2)}
 
-  .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
-  .seg button{appearance:none;border:0;background:transparent;color:var(--mut);font:600 14px/1.15 Inter,sans-serif;padding:10px 4px;border-radius:10px;cursor:pointer;
-    transition:background .15s,color .15s}
-  .seg button small{display:block;font-size:11.5px;font-weight:500;color:var(--mut2);margin-top:3px}
-  .seg button.on{background:var(--card2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2)}
-  .seg button.on small{color:var(--acc2)}
-  .seg button.off{opacity:.45}
-  .msg{font-size:13px;color:var(--acc2);margin:8px 2px 0}
-
-  details{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:18px}
-  summary{list-style:none;cursor:pointer;padding:14px;font-weight:600;font-size:14.5px;display:flex;justify-content:space-between;align-items:center}
-  summary::-webkit-details-marker{display:none}
-  summary span{color:var(--mut);font-weight:500;font-size:13px}
-  summary svg{transition:transform .2s;color:var(--mut)}
-  details[open] summary svg{transform:rotate(180deg)}
-  details .in{padding:0 14px 4px}
-  details input,details textarea{background:var(--bg)}
-
-  .incl{display:flex;flex-wrap:wrap;gap:6px 14px;margin:2px 2px 0;color:var(--mut);font-size:13px}
-  .incl span{display:flex;align-items:center;gap:6px}
-  .incl svg{color:var(--acc)}
-
-  .list{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
-  .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--line)}
+  /* ---------- проверка ---------- */
+  .sum{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+  .row{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-bottom:1px solid var(--line);cursor:pointer}
   .row:last-child{border-bottom:0}
-  .row span{color:var(--text)}
-  .row span small{display:block;color:var(--mut);font-size:12.5px}
-  .row b{font-weight:700;white-space:nowrap}
-  .row b.acc{color:var(--acc2)}
-  .h2{font-size:13px;font-weight:600;color:var(--mut);margin:0 2px 8px;text-transform:uppercase;letter-spacing:.6px}
-  .steps .row{justify-content:flex-start}
-  .steps i{font-style:normal;flex:0 0 24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--accbg);color:var(--acc2)}
-  .ghost{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--r);cursor:pointer;
-    background:var(--card);border:1px solid var(--line2);color:var(--text);font:600 15px/1 Inter,sans-serif}
-
-  .save{font-size:13px;color:#34c759;margin:8px 2px 0;font-weight:500}
-  .guar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:4px 14px;margin-bottom:18px}
-  .guar div{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--mut)}
-  .guar div:last-child{border-bottom:0}
+  .row .k{flex:0 0 92px;color:var(--mut);font-size:13.5px}
+  .row .v{flex:1;min-width:0;font-weight:500;overflow-wrap:anywhere}
+  .row .ed{color:var(--mut2);font-size:12.5px;font-weight:600}
+  .total{display:flex;justify-content:space-between;align-items:baseline;padding:4px 2px 14px}
+  .total span{color:var(--mut)}
+  .total b{font-size:26px;font-weight:800;letter-spacing:-.5px}
+  .guar{display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:var(--mut);margin:0 2px}
+  .guar div{display:flex;gap:9px;align-items:flex-start}
   .guar svg{flex:0 0 16px;color:var(--acc);margin-top:2px}
   .guar b{color:var(--text);font-weight:600}
-  .link{display:block;text-align:center;color:var(--mut);font-size:13.5px;margin:14px 0 0;text-decoration:none}
-  .link b{color:var(--text);font-weight:600}
-  .cta{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:3;padding:10px 16px 10px;
-    background:linear-gradient(0deg,var(--bg) 55%,rgba(12,12,15,0))}
-  .cta button{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:488px;margin:0 auto;border:0;border-radius:var(--r);
-    padding:16px 18px;color:#fff;cursor:pointer;font:700 16px/1 Inter,sans-serif;background:var(--acc);transition:transform .1s,background .15s}
-  .cta button:active{transform:scale(.985);background:#e8352b}
-  .cta button span{font-weight:600;opacity:.85}
-  .cta button.solo{justify-content:center}
-  .cta[hidden]{display:none}
-  .err{font-size:13px;color:var(--acc2);text-align:center;margin:0 0 8px;display:none}
 
-  nav{position:fixed;left:0;right:0;bottom:0;z-index:4;background:rgba(18,18,22,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-  nav div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-  nav button{appearance:none;border:0;background:none;color:var(--mut2);font:600 11px/1 Inter,sans-serif;padding:10px 0 12px;cursor:pointer;
-    display:flex;flex-direction:column;align-items:center;gap:6px;transition:color .15s}
-  nav button.on{color:var(--text)}
-  nav button.on svg{color:var(--acc)}
+  /* ---------- кнопка внизу (вне Telegram; в Telegram — родная MainButton) ---------- */
+  .cta{position:fixed;left:0;right:0;bottom:0;z-index:6;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(0deg,var(--bg) 60%,rgba(12,12,15,0))}
+  .cta[hidden],.tg .cta{display:none}
+  .cta button{display:block;width:100%;max-width:488px;margin:0 auto;border:0;border-radius:var(--r);padding:17px;color:#fff;cursor:pointer;
+    font:700 16px/1 Inter,sans-serif;background:var(--acc);transition:transform .1s,opacity .15s}
+  .cta button:active{transform:scale(.985)}
+  .cta button:disabled{opacity:.4}
 
-  .done{display:none;position:fixed;inset:0;z-index:9;background:var(--bg);place-items:center;text-align:center;padding:24px}
-  .done.on{display:grid}
-  .done .ok{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;background:var(--accbg);color:var(--acc2)}
-  .done h2{font-size:22px;font-weight:800;margin:0 0 6px}
-  .done p{color:var(--mut);margin:0}
-  #out{white-space:pre-wrap;font-size:12px;color:var(--mut);margin-top:12px;word-break:break-all}
+  /* ---------- шторка цен ---------- */
+  .sheet{position:fixed;inset:0;z-index:20;display:none}
+  .sheet.on{display:block}
+  .sheet .dim{position:absolute;inset:0;background:rgba(0,0,0,.6);animation:fade .2s}
+  .sheet .pane{position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:#141418;border-radius:22px 22px 0 0;
+    border-top:1px solid var(--line2);padding:10px 16px calc(24px + env(safe-area-inset-bottom));animation:up .25s ease}
+  .sheet .grab{width:40px;height:5px;border-radius:5px;background:var(--line2);margin:0 auto 14px}
+  .plist{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 16px}
+  .plist div{display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);gap:10px}
+  .plist div:last-child{border-bottom:0}
+  .plist span small{display:block;color:var(--mut);font-size:12px}
+  .plist b{white-space:nowrap}
+  .plist b.a{color:var(--acc2)}
+  .h3{font-size:12.5px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin:0 2px 8px}
+  .close{display:block;width:100%;margin-top:18px;padding:15px;border-radius:14px;border:1px solid var(--line2);background:var(--card);
+    font-weight:600;cursor:pointer}
+  @keyframes fade{from{opacity:0}}
+  @keyframes up{from{transform:translateY(40px);opacity:.4}}
+
+  .done{text-align:center;padding-top:22vh}
+  .done .ok{width:68px;height:68px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;background:var(--accbg);color:var(--acc2)}
+  #out{white-space:pre-wrap;font-size:12px;color:var(--mut);margin-top:14px;word-break:break-all;text-align:left}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute">
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
 
+<div class="hdr" id="hdr">
+  <button class="back" id="back" aria-label="Назад"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="prog"><i id="bar"></i></div>
+  <div class="cnt" id="cnt"></div>
+</div>
+
 <main>
-  <div class="top">
-    <div class="logo">SL</div>
-    <div><b>survival.loop</b><span>Ролики на заказ</span></div>
-    <div class="badge"><i></i>Принимаем заказы</div>
-  </div>
-
-  <!-- ===== Ролик ===== -->
-  <section class="tab on" id="t-order">
-    <h1>Заказать ролик</h1>
-    <p class="lead">Анимированная история выживания под вашу идею. Готово за сутки.</p>
-
-    <div class="field">
-      <div class="lab">Идея ролика</div>
-      <textarea id="o-tema" placeholder="Например: школьник застрял в лифте во время пожара"></textarea>
+  <!-- 0. Приветствие -->
+  <section class="scr on" data-s="welcome">
+    <div class="brand">
+      <div class="logo">SL</div>
+      <div><b>survival.loop</b><span>Ролики на заказ</span></div>
+      <div class="live"><i></i>Принимаем заказы</div>
     </div>
-
-    <div class="field">
-      <div class="lab">Длина</div>
-      <div class="seg" data-name="dlina">
-        <button data-v="до 60 сек" class="on">до 60 с<small>390 ₽</small></button>
-        <button data-v="60–90 сек">60–90 с<small>490 ₽</small></button>
-        <button data-v="90–120 сек">90–120 с<small>590 ₽</small></button>
-      </div>
+    <h1>Сделаем любой ролик. Всё — без вас.</h1>
+    <p class="lead">Анимированная история под вашу идею: сценарий, анимация, озвучка, звук и монтаж — в стиле наших роликов.</p>
+    <div class="shots">
+      <img src="img/f1.jpg" alt="" loading="eager"><img src="img/f2.jpg" alt=""><img src="img/f3.jpg" alt="">
+      <img src="img/f4.jpg" alt=""><img src="img/f5.jpg" alt=""><img src="img/f6.jpg" alt="">
     </div>
-
-    <div class="field">
-      <div class="lab">Формат</div>
-      <div class="seg" data-name="format">
-        <button data-v="9:16 (TikTok, Reels, Shorts)" class="on">9:16<small>TikTok, Reels</small></button>
-        <button data-v="16:9 (YouTube)">16:9<small>YouTube</small></button>
-        <button data-v="оба формата">Оба<small>+100 ₽</small></button>
-      </div>
+    <div class="stats">
+      <div><b>2 млн+</b><span>просмотров у наших роликов</span></div>
+      <div><b>24 часа</b><span>и ролик готов</span></div>
+      <div><b>от 390 ₽</b><span>за ролик под ключ</span></div>
     </div>
-
-    <div class="field">
-      <div class="lab">Срок</div>
-      <div class="seg" data-name="srok">
-        <button data-v="за сутки" class="on">За сутки<small>Обычный</small></button>
-        <button data-v="срочно, за 2–3 часа" class="urg">За 2–3 часа<small>+200 ₽</small></button>
-      </div>
-      <p class="msg" id="nope" hidden>Срочный заказ сейчас недоступен. Выберите «за сутки».</p>
+    <div class="checks">
+      <div><svg width="18" height="18"><use href="#ck"/></svg>Без водяного знака — ролик полностью ваш</div>
+      <div><svg width="18" height="18"><use href="#ck"/></svg>Оплата только после того, как согласуем цену</div>
+      <div><svg width="18" height="18"><use href="#ck"/></svg>Не успели в срок — вернём деньги</div>
     </div>
+    <div class="links"><button id="openPrices">Цены</button><button id="ask">Задать вопрос</button></div>
+  </section>
 
-    <details>
-      <summary>Детали <span>необязательно <svg width="16" height="16"><use href="#i-down"/></svg></span></summary>
-      <div class="in">
-        <div class="field"><div class="lab">Герой</div><input id="o-geroy" placeholder="Имя, возраст: Артём, 14 лет"></div>
-        <div class="field"><div class="lab">Место и время</div><input id="o-mesto" placeholder="Многоэтажка, вечер"></div>
-        <div class="field"><div class="lab">Пример <small>видео можно прислать в чат</small></div><input id="o-primer" inputmode="url" placeholder="Ссылка на похожий ролик"></div>
-        <div class="field"><div class="lab">Пожелания</div><textarea id="o-pozhelaniya" placeholder="Для чего ролик, что обязательно показать"></textarea></div>
-        <div class="field"><div class="lab">Контакт <small>если не в этом чате</small></div><input id="o-kontakt" placeholder="@ник, телефон или почта"></div>
-      </div>
-    </details>
-
-    <div class="guar">
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Без водяного знака</b> — ролик полностью ваш</span></div>
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Сценарий, анимация, озвучка, звук, монтаж</b> — всё делаем за вас</span></div>
+  <!-- 1. Что делаем -->
+  <section class="scr" data-s="tip">
+    <h2>Что сделать?</h2>
+    <p class="lead">Выберите вариант — дальше пара коротких вопросов.</p>
+    <div class="opts" data-name="tip">
+      <button class="opt" data-v="ролик"><span class="tx"><span class="t">Один ролик</span><span class="s">История на 1–2 минуты</span></span><span class="p">от 390 ₽</span></button>
+      <button class="opt" data-v="сериал"><span class="tx"><span class="t">Сериал из 5 частей<span class="badge">выгоднее</span></span><span class="s">Одна история с продолжением</span></span><span class="p">от 1 490 ₽</span></button>
+      <button class="opt" data-v="крупный заказ"><span class="tx"><span class="t">Много роликов</span><span class="s">Пакет для канала или бизнеса</span></span><span class="p" style="color:var(--mut)">договорная</span></button>
     </div>
   </section>
 
-  <!-- ===== Сериал ===== -->
-  <section class="tab" id="t-series">
-    <h1>Сериал целиком</h1>
-    <p class="lead">5 частей одной истории с крючком в конце каждой. Готово за 2 дня.</p>
-
-    <div class="field">
-      <div class="lab">О чём сериал</div>
-      <textarea id="s-tema" placeholder="Например: семья застряла на даче во время наводнения"></textarea>
-    </div>
-
-    <div class="field">
-      <div class="lab">Длина каждой части</div>
-      <div class="seg" data-name="chast">
-        <button data-v="до 60 сек" class="on">до 60 с<small>1 490 ₽</small></button>
-        <button data-v="60–90 сек">60–90 с<small>1 890 ₽</small></button>
-        <button data-v="90–120 сек">90–120 с<small>2 290 ₽</small></button>
-      </div>
-      <p class="save" id="s-save"></p>
-    </div>
-
-    <div class="field">
-      <div class="lab">Формат</div>
-      <div class="seg" data-name="sformat">
-        <button data-v="9:16 (TikTok, Reels, Shorts)" class="on">9:16<small>TikTok, Reels</small></button>
-        <button data-v="16:9 (YouTube)">16:9<small>YouTube</small></button>
-        <button data-v="оба формата">Оба<small>+500 ₽</small></button>
-      </div>
-    </div>
-
-    <details>
-      <summary>Детали <span>необязательно <svg width="16" height="16"><use href="#i-down"/></svg></span></summary>
-      <div class="in">
-        <div class="field"><div class="lab">Герои</div><input id="s-geroy" placeholder="Имена, возраст"></div>
-        <div class="field"><div class="lab">Пример <small>видео можно прислать в чат</small></div><input id="s-primer" inputmode="url" placeholder="Ссылка на похожий ролик"></div>
-        <div class="field"><div class="lab">Пожелания</div><textarea id="s-pozhelaniya" placeholder="Чем должно закончиться, что обязательно показать"></textarea></div>
-        <div class="field"><div class="lab">Контакт <small>если не в этом чате</small></div><input id="s-kontakt" placeholder="@ник, телефон или почта"></div>
-      </div>
-    </details>
-
-    <div class="guar">
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Без водяного знака</b> — все 5 частей полностью ваши</span></div>
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Оплата в два этапа</b> — половина до старта, половина после первой части</span></div>
+  <!-- 2. Тема -->
+  <section class="scr" data-s="tema">
+    <h2 id="temaH">О чём ролик?</h2>
+    <p class="lead" id="temaL">Кратко, в одну-две фразы. Остальное придумаем сами.</p>
+    <textarea id="tema" maxlength="900" placeholder="Например: школьник застрял в лифте во время пожара"></textarea>
+    <div class="chips" id="temaChips">
+      <button class="chip">Застрял в лифте во время пожара</button>
+      <button class="chip">Потерялся в лесу зимой</button>
+      <button class="chip">Ночь в закрытом торговом центре</button>
+      <button class="chip">Нападение собак у гаражей</button>
     </div>
   </section>
 
-  <!-- ===== Крупный заказ ===== -->
-  <section class="tab" id="t-big">
-    <h1>Крупный заказ</h1>
-    <p class="lead">Пакеты роликов для канала или бизнеса, длинные сериалы. Цену назовём после заявки, от&nbsp;390&nbsp;₽ за&nbsp;ролик.</p>
-
-    <div class="field">
-      <div class="lab">Что нужно</div>
-      <textarea id="b-tema" placeholder="Например: 10 роликов в месяц для канала или сериал на 10 частей"></textarea>
+  <!-- 3a. Длина ролика -->
+  <section class="scr" data-s="dlina">
+    <h2>Какой длины?</h2>
+    <p class="lead">Цена уже со сценарием, озвучкой и монтажом.</p>
+    <div class="opts" data-name="dlina">
+      <button class="opt" data-v="до 60 сек"><span class="rd"></span><span class="tx"><span class="t">До 60 секунд</span><span class="s">Коротко и динамично</span></span><span class="p">390 ₽</span></button>
+      <button class="opt" data-v="60–90 сек"><span class="rd"></span><span class="tx"><span class="t">60–90 секунд</span><span class="s">Как большинство наших роликов</span></span><span class="p">490 ₽</span></button>
+      <button class="opt" data-v="90–120 сек"><span class="rd"></span><span class="tx"><span class="t">90–120 секунд</span><span class="s">Больше деталей и поворотов</span></span><span class="p">590 ₽</span></button>
     </div>
-
-    <div class="field">
-      <div class="lab">Сколько роликов</div>
-      <div class="seg" data-name="obem">
-        <button data-v="6–10" class="on">6–10</button>
-        <button data-v="10–20">10–20</button>
-        <button data-v="больше 20">20+</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="lab">Формат</div>
-      <div class="seg" data-name="bformat">
-        <button data-v="9:16 (TikTok, Reels, Shorts)" class="on">9:16</button>
-        <button data-v="16:9 (YouTube)">16:9</button>
-        <button data-v="оба формата">Оба</button>
-      </div>
-    </div>
-
-    <div class="field"><div class="lab">Пример <small>необязательно</small></div><input id="b-primer" inputmode="url" placeholder="Ссылка на канал или ролик"></div>
-    <div class="field"><div class="lab">Контакт <small>если не в этом чате</small></div><input id="b-kontakt" placeholder="@ник, телефон или почта"></div>
   </section>
 
-  <!-- ===== Цены ===== -->
-  <section class="tab" id="t-price">
-    <h1>Цены</h1>
-    <p class="lead">Сценарий, анимация, озвучка, звук и монтаж уже в цене.</p>
-
-    <div class="list">
-      <div class="row"><span>До 60 секунд</span><b data-p="до 60 сек"></b></div>
-      <div class="row"><span>60–90 секунд</span><b data-p="60–90 сек"></b></div>
-      <div class="row"><span>90–120 секунд</span><b data-p="90–120 сек"></b></div>
-      <div class="row"><span>Оба формата, 9:16 и 16:9</span><b class="acc">+100 ₽</b></div>
-      <div class="row"><span>Срочно, за 2–3 часа</span><b class="acc">+200 ₽</b></div>
+  <!-- 3b. Длина части сериала -->
+  <section class="scr" data-s="chast">
+    <h2>Длина каждой части</h2>
+    <p class="lead">Цена за весь сериал из 5 частей.</p>
+    <div class="opts" data-name="chast">
+      <button class="opt" data-v="до 60 сек"><span class="rd"></span><span class="tx"><span class="t">До 60 секунд</span><span class="s">5 частей</span></span><span class="p">1 490 ₽<small>1 950 ₽</small></span></button>
+      <button class="opt" data-v="60–90 сек"><span class="rd"></span><span class="tx"><span class="t">60–90 секунд</span><span class="s">5 частей</span></span><span class="p">1 890 ₽<small>2 450 ₽</small></span></button>
+      <button class="opt" data-v="90–120 сек"><span class="rd"></span><span class="tx"><span class="t">90–120 секунд</span><span class="s">5 частей</span></span><span class="p">2 290 ₽<small>2 950 ₽</small></span></button>
     </div>
+  </section>
 
-    <div class="h2">Сериал целиком, 5 частей</div>
-    <div class="list">
-      <div class="row"><span>Части до 60 секунд<small>вместо 1 950 ₽</small></span><b data-s="до 60 сек"></b></div>
-      <div class="row"><span>Части 60–90 секунд<small>вместо 2 450 ₽</small></span><b data-s="60–90 сек"></b></div>
-      <div class="row"><span>Части 90–120 секунд<small>вместо 2 950 ₽</small></span><b data-s="90–120 сек"></b></div>
+  <!-- 3c. Объём пакета -->
+  <section class="scr" data-s="obem">
+    <h2>Сколько роликов?</h2>
+    <p class="lead">Точную цену назовём после заявки — от 390 ₽ за ролик.</p>
+    <div class="opts" data-name="obem">
+      <button class="opt" data-v="6–10"><span class="rd"></span><span class="tx"><span class="t">6–10 роликов</span></span></button>
+      <button class="opt" data-v="10–20"><span class="rd"></span><span class="tx"><span class="t">10–20 роликов</span></span></button>
+      <button class="opt" data-v="больше 20"><span class="rd"></span><span class="tx"><span class="t">Больше 20</span><span class="s">Или регулярно каждый месяц</span></span></button>
     </div>
+  </section>
 
-    <div class="h2">Гарантии</div>
+  <!-- 4. Формат -->
+  <section class="scr" data-s="format">
+    <h2>Какой формат?</h2>
+    <p class="lead">Под какую площадку ролик.</p>
+    <div class="opts" data-name="format">
+      <button class="opt" data-v="9:16 (TikTok, Reels, Shorts)"><span class="rd"></span><span class="tx"><span class="t">Вертикальный 9:16</span><span class="s">TikTok, Reels, Shorts</span></span></button>
+      <button class="opt" data-v="16:9 (YouTube)"><span class="rd"></span><span class="tx"><span class="t">Горизонтальный 16:9</span><span class="s">YouTube</span></span></button>
+      <button class="opt" data-v="оба формата"><span class="rd"></span><span class="tx"><span class="t">Оба формата</span><span class="s">Для всех площадок</span></span><span class="p" id="bothP">+100 ₽</span></button>
+    </div>
+  </section>
+
+  <!-- 5. Срок -->
+  <section class="scr" data-s="srok">
+    <h2>Когда нужен?</h2>
+    <p class="lead">Отсчёт — после оплаты.</p>
+    <div class="opts" data-name="srok">
+      <button class="opt" data-v="за сутки"><span class="rd"></span><span class="tx"><span class="t">За сутки</span><span class="s">Обычный срок</span></span></button>
+      <button class="opt urg" data-v="срочно, за 2–3 часа"><span class="rd"></span><span class="tx"><span class="t">За 2–3 часа</span><span class="s" id="urgS">Срочно</span></span><span class="p">+200 ₽</span></button>
+    </div>
+    <p class="msg" id="nope" hidden>Срочный заказ сейчас недоступен. Выберите «за сутки».</p>
+  </section>
+
+  <!-- 6. Детали -->
+  <section class="scr" data-s="details">
+    <h2>Детали</h2>
+    <p class="lead">Необязательно — можно сразу дальше.</p>
+    <div class="field"><div class="lab">Герой</div><input id="geroy" maxlength="300" placeholder="Имя и возраст, например: Артём, 14 лет"></div>
+    <div class="field"><div class="lab">Пример <small>видео можно прислать в чат после заявки</small></div><input id="primer" maxlength="500" inputmode="url" placeholder="Ссылка на похожий ролик"></div>
+    <div class="field"><div class="lab">Пожелания</div><textarea id="pozhelaniya" maxlength="900" style="min-height:96px" placeholder="Для чего ролик, что обязательно показать, чем закончить"></textarea></div>
+  </section>
+
+  <!-- 7. Проверка -->
+  <section class="scr" data-s="review">
+    <h2>Всё верно?</h2>
+    <p class="lead">Нажмите на строку, чтобы исправить.</p>
+    <div class="sum" id="sum"></div>
+    <div class="total"><span id="totalL">Стоимость</span><b id="total"></b></div>
     <div class="guar">
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Без водяного знака.</b> Все ролики полностью ваши, можно выкладывать куда угодно.</span></div>
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Оплата после согласования.</b> Сначала обсуждаем идею и цену, потом платите.</span></div>
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Не успели в срок — вернём деньги.</b> Полностью.</span></div>
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Сериал — оплата в два этапа.</b> Половина до старта, половина после первой части.</span></div>
-      <div><svg width="16" height="16"><use href="#i-check"/></svg><span><b>Правка текста до озвучки — бесплатно.</b></span></div>
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Сначала согласуем.</b> Мы ответим в чате и подтвердим цену и срок — платите после этого.</span></div>
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Без водяного знака.</b> Ролик полностью ваш.</span></div>
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Не успели в срок — вернём деньги.</b></span></div>
     </div>
-
-    <div class="h2">Как это работает</div>
-    <div class="list steps">
-      <div class="row"><i>1</i><span>Заявка<small>Описываете идею</small></span></div>
-      <div class="row"><i>2</i><span>Цена<small>Подтверждаем цену и срок в чате</small></span></div>
-      <div class="row"><i>3</i><span>Оплата<small>Когда согласуем детали</small></span></div>
-      <div class="row"><i>4</i><span>Ролик<small>Присылаем готовое видео в чат</small></span></div>
-    </div>
-
-    <button class="ghost" id="ask" type="button">Задать вопрос</button>
-    <a class="link" id="chan" href="https://t.me/survival_loop" target="_blank">Наши ролики — <b>канал survival.loop в Telegram</b></a>
     <div id="out"></div>
+  </section>
+
+  <section class="scr" data-s="done">
+    <div class="done">
+      <div class="ok"><svg width="32" height="32"><use href="#ck"/></svg></div>
+      <h2>Заявка отправлена</h2>
+      <p class="lead">Ответим в чате с ботом и назовём цену.</p>
+    </div>
   </section>
 </main>
 
-<div class="cta" id="cta">
-  <div class="err" id="err">Опишите идею</div>
-  <button id="send" type="button">Заказать <span id="sum">390 ₽</span></button>
+<div class="cta" id="ctaBox"><button id="cta" type="button">Начать делать ролик</button></div>
+
+<div class="sheet" id="prices">
+  <div class="dim" data-close></div>
+  <div class="pane">
+    <div class="grab"></div>
+    <h2 style="margin-top:0">Цены</h2>
+    <p class="lead">Сценарий, анимация, озвучка, звук и монтаж уже в цене.</p>
+    <div class="h3">Один ролик</div>
+    <div class="plist">
+      <div><span>До 60 секунд</span><b>390 ₽</b></div>
+      <div><span>60–90 секунд</span><b>490 ₽</b></div>
+      <div><span>90–120 секунд</span><b>590 ₽</b></div>
+    </div>
+    <div class="h3">Сериал целиком, 5 частей</div>
+    <div class="plist">
+      <div><span>Части до 60 секунд<small>вместо 1 950 ₽</small></span><b>1 490 ₽</b></div>
+      <div><span>Части 60–90 секунд<small>вместо 2 450 ₽</small></span><b>1 890 ₽</b></div>
+      <div><span>Части 90–120 секунд<small>вместо 2 950 ₽</small></span><b>2 290 ₽</b></div>
+    </div>
+    <div class="h3">Дополнительно</div>
+    <div class="plist">
+      <div><span>Оба формата, 9:16 и 16:9<small>за каждую часть</small></span><b class="a">+100 ₽</b></div>
+      <div><span>Срочно, за 2–3 часа</span><b class="a">+200 ₽</b></div>
+    </div>
+    <div class="h3">Гарантии</div>
+    <div class="guar" style="margin-bottom:4px">
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Без водяного знака.</b> Все ролики полностью ваши.</span></div>
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Оплата после согласования</b> цены и срока.</span></div>
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Не успели в срок — вернём деньги</b> полностью.</span></div>
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Сериал — оплата в два этапа:</b> половина до старта, половина после первой части.</span></div>
+      <div><svg width="16" height="16"><use href="#ck"/></svg><span><b>Правка текста до озвучки — бесплатно.</b></span></div>
+    </div>
+    <button class="close" data-close>Понятно</button>
+  </div>
 </div>
 
-<nav><div>
-  <button class="on" data-tab="t-order">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>Ролик</button>
-  <button data-tab="t-series">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M18.5 8v8M21.5 9.5v5"/></svg>Сериал</button>
-  <button data-tab="t-big">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M6 5h12M8.5 2h7"/></svg>Крупный</button>
-  <button data-tab="t-price">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Цены</button>
-</div></nav>
-
-<div class="done" id="done"><div>
-  <div class="ok"><svg width="30" height="30"><use href="#i-check"/></svg></div>
-  <h2>Заявка отправлена</h2><p>Ответим в чате с ботом</p>
-</div></div>
-
 <script>
+(function () {
   const tg = window.Telegram && Telegram.WebApp;
   const inTg = !!(tg && tg.initData);
-  if (inTg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#0c0c0f'); tg.setBackgroundColor('#0c0c0f'); tg.setBottomBarColor && tg.setBottomBarColor('#121216'); } catch (e) {} }
-  const haptic = (k, v) => { try { inTg && tg.HapticFeedback[k](v); } catch (e) {} };
   const $ = id => document.getElementById(id);
+  const haptic = (k, v) => { try { inTg && tg.HapticFeedback[k](v); } catch (e) {} };
+  if (inTg) {
+    document.documentElement.classList.add('tg');
+    tg.ready(); tg.expand();
+    try { tg.setHeaderColor('#0c0c0f'); tg.setBackgroundColor('#0c0c0f'); tg.setBottomBarColor && tg.setBottomBarColor('#0c0c0f'); } catch (e) {}
+    try { tg.disableVerticalSwipes && tg.disableVerticalSwipes(); } catch (e) {}
+  }
 
-  // прайс — те же числа, что PRICES в bot.py
-  const PRICES = { 'до 60 сек': 390, '60–90 сек': 490, '90–120 сек': 590, 'серия из нескольких частей': 390 };
+  // те же числа, что PRICES / SERIES в bot.py
+  const PRICES = { 'до 60 сек': 390, '60–90 сек': 490, '90–120 сек': 590 };
+  const SERIES = { 'до 60 сек': 1490, '60–90 сек': 1890, '90–120 сек': 2290 };
   const rub = x => x.toLocaleString('ru-RU').replace(/\s/g, ' ') + ' ₽';
-  const SERIES = { 'до 60 сек': 1490, '60–90 сек': 1890, '90–120 сек': 2290 };   // сериал 5 частей, как SERIES в bot.py
-  document.querySelectorAll('[data-p]').forEach(el => el.textContent = rub(PRICES[el.dataset.p]));
-  document.querySelectorAll('[data-s]').forEach(el => el.textContent = rub(SERIES[el.dataset.s]));
 
-  const picked = {};
-  document.querySelectorAll('.seg').forEach(seg => {
-    picked[seg.dataset.name] = seg.querySelector('.on').dataset.v;
-    seg.addEventListener('click', ev => {
-      const b = ev.target.closest('button'); if (!b) return;
-      if (b.classList.contains('off')) { $('nope').hidden = false; haptic('notificationOccurred', 'error'); return; }
-      if (seg.dataset.name === 'srok') $('nope').hidden = true;
-      seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
-      picked[seg.dataset.name] = b.dataset.v;
-      upd(); haptic('selectionChanged');
-    });
-  });
+  const urgentOn = new URLSearchParams(location.search).get('urgent') !== '0';
+  const urgBtn = document.querySelector('.opt.urg');
+  if (!urgentOn) { urgBtn.classList.add('off'); $('urgS').textContent = 'Недоступно сейчас'; }
 
-  // срочные: бот добавляет ?urgent=0, когда владелец их выключил
-  function setUrgent(on) {
-    const c = document.querySelector('.urg');
-    c.classList.toggle('off', !on);
-    if (!on && c.classList.contains('on')) document.querySelector('[data-name=srok] button').click();
-    if (on) $('nope').hidden = true;
-  }
-  window.setUrgent = setUrgent;
-  setUrgent(new URLSearchParams(location.search).get('urgent') !== '0');
-
-  let tab = 't-order';
-  function upd() {
-    $('err').style.display = 'none';
-    $('cta').hidden = tab === 't-price';
-    const btn = $('send');
-    if (tab === 't-series') {
-      d = { tip: 'сериал', tema: val('s-tema'), dlina: 'сериал, 5 частей', chast: picked.chast, format: picked.sformat,
-            geroy: val('s-geroy'), primer: val('s-primer'), pozhelaniya: val('s-pozhelaniya'), kontakt: val('s-kontakt') };
-    } else if (tab === 't-big') { btn.className = 'solo'; btn.innerHTML = 'Отправить запрос'; return; }
-    if (tab === 't-series') {
-      const s = SERIES[picked.chast] + (picked.sformat === 'оба формата' ? 500 : 0);
-      $('s-save').textContent = 'Выгода ' + rub(PRICES[picked.chast] * 5 - SERIES[picked.chast]) + ' по сравнению с 5 отдельными роликами';
-      btn.className = ''; btn.innerHTML = 'Заказать сериал <span>' + rub(s) + '</span>'; return;
-    }
-    let p = PRICES[picked.dlina];
-    if (picked.format === 'оба формата') p += 100;
-    if (picked.srok === 'срочно, за 2–3 часа') p += 200;
-    btn.className = ''; btn.innerHTML = 'Заказать <span>' + rub(p) + '</span>';
-  }
-  document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
-    tab = b.dataset.tab;
-    document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
-    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.id === tab));
-    scrollTo(0, 0); upd(); haptic('selectionChanged');
-  });
-  upd();
-
-  const val = id => $(id).value.trim().slice(0, 900);
-
-  function ask(ev) {
-    ev && ev.preventDefault();
-    if (window.onVopros) return window.onVopros();   // демо-страница
-    if (inTg) tg.sendData(JSON.stringify({ vopros: 1 }));
-    else $('out').textContent = 'Вне Telegram: бот попросит написать вопрос в чат.';
-  }
-  $('ask').onclick = ask;
-  $('chan').onclick = ev => { if (inTg) { ev.preventDefault(); tg.openTelegramLink('https://t.me/survival_loop'); } };
-
-  $('send').onclick = () => {
-    let d;
-    if (tab === 't-big') {
-      d = { tip: 'крупный заказ', tema: val('b-tema'), obem: picked.obem, format: picked.bformat,
-            primer: val('b-primer'), kontakt: val('b-kontakt') };
-    } else {
-      d = { tema: val('o-tema'), geroy: val('o-geroy'), mesto: val('o-mesto'), dlina: picked.dlina, format: picked.format,
-            srok: picked.srok, primer: val('o-primer'), pozhelaniya: val('o-pozhelaniya'), kontakt: val('o-kontakt') };
-    }
-    if (!d.tema) {
-      $('err').style.display = 'block'; haptic('notificationOccurred', 'error');
-      $({ 't-big': 'b-tema', 't-series': 's-tema' }[tab] || 'o-tema').focus(); return;
-    }
-    if (!d.kontakt) d.kontakt = 'в этом чате';
-    if (tab !== 't-big' && !d.pozhelaniya) d.pozhelaniya = 'нет';
-    // Telegram принимает из формы не больше 4096 байт — длинные поля подрезаем, иначе заявка молча не уйдёт
-    const order = ['pozhelaniya', 'tema', 'geroy', 'mesto', 'primer', 'kontakt'];
-    let json = JSON.stringify(d);
-    while (new TextEncoder().encode(json).length > 3800) {
-      const k = order.find(k => d[k] && d[k].length > 120) || order.find(k => d[k] && d[k].length > 20);
-      if (!k) break;
-      d[k] = d[k].slice(0, Math.floor(d[k].length * 0.8));
-      json = JSON.stringify(d);
-    }
-    if (window.onZayavka) return window.onZayavka(d);   // демо-страница
-    if (inTg) {
-      try { haptic('notificationOccurred', 'success'); tg.sendData(json); }
-      catch (e) {   // форма открыта не кнопкой из чата — отправка невозможна
-        tg.showAlert('Откройте форму кнопкой «Оставить заявку» внизу чата с ботом.');
-      }
-    } else { $('done').classList.add('on'); console.log(d); }
+  const d = {};                       // ответы
+  const FLOWS = {
+    'ролик':         ['tip', 'tema', 'dlina', 'format', 'srok', 'details', 'review'],
+    'сериал':        ['tip', 'tema', 'chast', 'format', 'details', 'review'],
+    'крупный заказ': ['tip', 'tema', 'obem', 'format', 'details', 'review'],
   };
+  const flow = () => FLOWS[d.tip] || FLOWS['ролик'];
+  let cur = 'welcome', editing = false;
+
+  function price() {
+    const both = d.format === 'оба формата';
+    if (d.tip === 'сериал') return d.chast ? SERIES[d.chast] + (both ? 500 : 0) : null;
+    if (d.tip === 'крупный заказ') return null;
+    if (!d.dlina) return null;
+    return PRICES[d.dlina] + (both ? 100 : 0) + (d.srok === 'срочно, за 2–3 часа' ? 200 : 0);
+  }
+
+  // ---------- навигация
+  function show(name, dir) {
+    cur = name;
+    document.querySelectorAll('.scr').forEach(s => {
+      const on = s.dataset.s === name;
+      s.classList.toggle('on', on);
+      s.classList.toggle('back-anim', on && dir < 0);
+    });
+    scrollTo(0, 0);
+    const steps = flow(), i = steps.indexOf(name);
+    const stepScreen = i >= 0;
+    $('hdr').classList.toggle('on', stepScreen);
+    if (stepScreen) {
+      $('bar').style.width = ((i + 1) / steps.length * 100) + '%';
+      $('cnt').textContent = (i + 1) + '/' + steps.length;
+    }
+    if (inTg) { stepScreen ? tg.BackButton.show() : tg.BackButton.hide(); }
+    if (name === 'tema') {
+      const big = d.tip === 'крупный заказ', ser = d.tip === 'сериал';
+      $('temaH').textContent = big ? 'Что нужно?' : ser ? 'О чём сериал?' : 'О чём ролик?';
+      $('temaL').textContent = big ? 'Тематика, для чего ролики, как часто.' : 'Кратко, в одну-две фразы. Остальное придумаем сами.';
+      $('temaChips').hidden = big;
+      setTimeout(() => { try { $('tema').focus(); } catch (e) {} }, 320);
+    }
+    if (name === 'format') $('bothP').textContent = d.tip === 'сериал' ? '+500 ₽' : d.tip === 'крупный заказ' ? '' : '+100 ₽';
+    if (name === 'review') renderReview();
+    mark();
+    updCta();
+  }
+  function next() {
+    if (cur === 'welcome') { show('tip', 1); return; }
+    const steps = flow(), i = steps.indexOf(cur);
+    if (cur === 'review') { submit(); return; }
+    if (editing && cur !== 'tip') { editing = false; show('review', 1); return; }
+    // смена типа во время правки: доспрашиваем недостающие шаги
+    show(steps[i + 1] || 'review', 1);
+  }
+  function back() {
+    if (!$('prices').classList.contains('on')) {
+      const steps = flow(), i = steps.indexOf(cur);
+      editing = false;
+      show(i > 0 ? steps[i - 1] : 'welcome', -1);
+    } else closePrices();
+    haptic('impactOccurred', 'light');
+  }
+  $('back').onclick = back;
+  if (inTg) tg.BackButton.onClick(back);
+
+  // ---------- выбор вариантов: тап = выбрать и сразу дальше
+  function mark() {
+    document.querySelectorAll('.opts').forEach(box => {
+      box.querySelectorAll('.opt').forEach(b => b.classList.toggle('on', d[box.dataset.name] === b.dataset.v));
+    });
+  }
+  document.querySelectorAll('.opts').forEach(box => box.addEventListener('click', ev => {
+    const b = ev.target.closest('.opt'); if (!b) return;
+    const name = box.dataset.name;
+    if (b.classList.contains('off')) { $('nope').hidden = false; haptic('notificationOccurred', 'error'); return; }
+    if (name === 'srok') $('nope').hidden = true;
+    const changedTip = name === 'tip' && d.tip && d.tip !== b.dataset.v;
+    d[name] = b.dataset.v;
+    if (changedTip) { delete d.dlina; delete d.chast; delete d.obem; delete d.srok; editing = false; }
+    mark(); updCta(); haptic('selectionChanged');
+    setTimeout(next, 180);
+  }));
+
+  // ---------- тема
+  const tema = $('tema');
+  tema.addEventListener('input', updCta);
+  $('temaChips').addEventListener('click', ev => {
+    const c = ev.target.closest('.chip'); if (!c) return;
+    tema.value = c.textContent; updCta(); haptic('selectionChanged');
+  });
+  const val = id => $(id).value.trim();
+  ['geroy', 'primer', 'pozhelaniya'].forEach(id => $(id).addEventListener('input', updCta));
+
+  // ---------- кнопка внизу (своя вне Telegram, родная MainButton в Telegram)
+  function ctaState() {
+    if (cur === 'welcome') return { text: 'Начать делать ролик', on: true, show: true };
+    if (cur === 'done') return { show: false };
+    if (cur === 'tema') return { text: 'Далее', on: val('tema').length >= 3, show: true };
+    if (cur === 'details') return { text: (val('geroy') || val('primer') || val('pozhelaniya')) ? 'Далее' : 'Пропустить', on: true, show: true };
+    if (cur === 'review') { const p = price(); return { text: 'Отправить заявку' + (p ? ' · ' + rub(p) : ''), on: true, show: true }; }
+    // шаги-варианты: кнопка нужна, только если уже выбрано (вернулись назад)
+    const box = document.querySelector('.scr.on .opts');
+    const chosen = box && d[box.dataset.name];
+    return { text: 'Далее', on: !!chosen, show: !!chosen };
+  }
+  function updCta() {
+    const s = ctaState();
+    if (inTg) {
+      const mb = tg.MainButton;
+      if (!s.show) { mb.hide(); return; }
+      mb.setParams({ text: s.text, color: s.on ? '#ff3b30' : '#3a3a42', text_color: '#ffffff', is_active: !!s.on, is_visible: true });
+    } else {
+      $('ctaBox').hidden = !s.show;
+      $('cta').textContent = s.text || '';
+      $('cta').disabled = !s.on;
+    }
+  }
+  function onCta() {
+    const s = ctaState();
+    if (!s.on) { haptic('notificationOccurred', 'error'); return; }
+    haptic('impactOccurred', 'medium');
+    next();
+  }
+  $('cta').onclick = onCta;
+  if (inTg) tg.MainButton.onClick(onCta);
+
+  // ---------- проверка
+  const NAMES = { tip: 'Что', tema: 'Тема', dlina: 'Длина', chast: 'Каждая часть', obem: 'Сколько', format: 'Формат', srok: 'Срок', details: 'Детали' };
+  const cap = s => String(s).charAt(0).toUpperCase() + String(s).slice(1);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  function renderReview() {
+    const tipName = { 'ролик': 'Один ролик', 'сериал': 'Сериал из 5 частей', 'крупный заказ': 'Много роликов' }[d.tip];
+    const rows = [['tip', tipName], ['tema', val('tema')]];
+    if (d.tip === 'ролик') rows.push(['dlina', d.dlina], ['format', d.format], ['srok', d.srok]);
+    if (d.tip === 'сериал') rows.push(['chast', d.chast], ['format', d.format], ['srok', 'за 2 дня']);
+    if (d.tip === 'крупный заказ') rows.push(['obem', d.obem], ['format', d.format]);
+    const det = [val('geroy'), val('primer'), val('pozhelaniya')].filter(Boolean).join(' · ');
+    rows.push(['details', det || 'нет']);
+    $('sum').innerHTML = rows.map(([k, v]) =>
+      `<div class="row" data-go="${k === 'srok' && d.tip !== 'ролик' ? '' : k}"><span class="k">${NAMES[k]}</span><span class="v">${esc(cap(v || '—'))}</span>` +
+      (k === 'srok' && d.tip !== 'ролик' ? '' : '<span class="ed">изменить</span>') + '</div>').join('');
+    const p = price();
+    $('totalL').textContent = d.tip === 'сериал' ? 'За весь сериал' : 'Стоимость';
+    $('total').textContent = p ? rub(p) : 'договорная';
+  }
+  $('sum').addEventListener('click', ev => {
+    const r = ev.target.closest('.row'); if (!r || !r.dataset.go) return;
+    editing = true; show(r.dataset.go, -1); haptic('selectionChanged');
+  });
+
+  // ---------- отправка
+  function submit() {
+    const data = { tip: d.tip, tema: val('tema'), format: d.format, geroy: val('geroy'), primer: val('primer'),
+                   pozhelaniya: val('pozhelaniya') || 'нет', kontakt: 'в этом чате' };
+    if (d.tip === 'ролик') Object.assign(data, { dlina: d.dlina, srok: d.srok });
+    if (d.tip === 'сериал') Object.assign(data, { dlina: 'сериал, 5 частей', chast: d.chast });
+    if (d.tip === 'крупный заказ') Object.assign(data, { obem: d.obem });
+    // Telegram принимает из формы не больше 4096 байт — длинные поля подрезаем, иначе заявка молча не уйдёт
+    const order = ['pozhelaniya', 'tema', 'geroy', 'primer'];
+    let json = JSON.stringify(data);
+    while (new TextEncoder().encode(json).length > 3800) {
+      const k = order.find(k => data[k] && data[k].length > 120) || order.find(k => data[k] && data[k].length > 20);
+      if (!k) break;
+      data[k] = data[k].slice(0, Math.floor(data[k].length * 0.8));
+      json = JSON.stringify(data);
+    }
+    if (window.onZayavka) return window.onZayavka(data);
+    if (inTg) {
+      try { haptic('notificationOccurred', 'success'); tg.sendData(json); }   // окно закроется само
+      catch (e) { tg.showAlert('Откройте форму кнопкой «Заказать ролик» внизу чата с ботом — так заявка дойдёт.'); }
+    } else {
+      show('done', 1);
+      $('out').textContent = json;
+      console.log('заявка', data);
+    }
+  }
+
+  // ---------- вопрос и цены
+  $('ask').onclick = () => {
+    if (window.onVopros) return window.onVopros();
+    if (inTg) { try { tg.sendData(JSON.stringify({ vopros: 1 })); } catch (e) { tg.close(); } }
+    else alert('Вне Telegram: бот попросит написать вопрос в чат.');
+  };
+  function openPrices() { $('prices').classList.add('on'); if (inTg) { tg.MainButton.hide(); tg.BackButton.show(); } else $('ctaBox').hidden = true; }
+  function closePrices() { $('prices').classList.remove('on'); show(cur, 0); }
+  $('openPrices').onclick = openPrices;
+  document.querySelectorAll('[data-close]').forEach(x => x.onclick = closePrices);
+
+  show('welcome', 0);
+})();
 </script>
 </body>
 </html>
